@@ -14,7 +14,6 @@ resource "aws_instance" "web-server1" {
 resource "aws_security_group" "mySG" {
   name        = "allow_tls"
   description = "Allow TLS inbound traffic"
-  vpc_id      = aws_vpc.myvpc.id
 
   # Ingress
   dynamic "ingress" {

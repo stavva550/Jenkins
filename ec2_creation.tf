@@ -5,6 +5,7 @@ provider "aws" {
 resource "aws_instance" "web-server1" {
   ami           = "ami-06475e8f54266e38e"
   instance_type = "t3.micro"
+  vpc_security_group_ids = [aws_security_group.mySG.id]
   user_data = file("userdata.sh")
   tags = {
     Name = "webserver1"

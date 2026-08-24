@@ -15,7 +15,34 @@ dnf install -y \
     fontconfig
 
 echo "===== Verifying Java ====="
-    java --version
+java --version
+
+echo "===== Installing Gradle ====="
+
+GRADLE_VERSION="8.14.3"
+GRADLE_HOME="/opt/gradle/gradle-${GRADLE_VERSION}"
+
+wget -O /tmp/gradle.zip \
+    "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip"
+
+mkdir -p /opt/gradle
+
+unzip -q /tmp/gradle.zip -d /opt/gradle
+
+echo "===== Configuring Gradle ====="
+
+cat > /etc/profile.d/gradle.sh <<EOF
+export GRADLE_HOME=${GRADLE_HOME}
+export PATH=\$GRADLE_HOME/bin:\$PATH
+EOF
+
+chmod +x /etc/profile.d/gradle.sh
+
+# Make Gradle available to Jenkins and other system users
+ln -sf "${GRADLE_HOME}/bin/gradle" /usr/local/bin/gradle
+
+echo "===== Verifying Gradle ====="
+gradle --version
 
 echo "===== Installing Docker ====="
 dnf install -y docker
@@ -62,6 +89,9 @@ java -version
 
 echo "Git:"
 git --version
+
+echo "Gradle:"
+gradle --version
 
 echo "Docker:"
 docker --version
